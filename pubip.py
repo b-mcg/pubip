@@ -68,8 +68,11 @@ class Py3status(object):
 
         """
         if not self.success:
+        # Set cache timeout to 1 minute 
+            CACHE_TIMEOUT   =       130
             response        =       {   'full_text'     :   'pubIP: None',
                                         'name'          :   'public',
+                                        'cached_until'  :   time() + CACHE_TIMEOUT
                                     }
             if i3status_config['colors']:
                 response['colors']      =       i3status_config['color_bad']
@@ -77,10 +80,10 @@ class Py3status(object):
             return (6, response)
 
         else:
-        # Set cache timeout seeing as how your public IP is unlikely to change much
-            CACHE_TIMEOUT   =       600
+        # Set cache timeout to 5 minutes
+            CACHE_TIMEOUT   =       300
 
-            # Bulid response dictionary
+        # Bulid response dictionary
             response        =       {   'full_text'     :   'pubIP: {0}'.format(self.ip), 
                                         'name'          :   'public',
                                         'cached_until'  :   time() + CACHE_TIMEOUT
