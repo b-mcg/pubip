@@ -54,6 +54,7 @@ class Py3status(object):
 
             with closing(requests.get(self.url, verify=False)) as res:
                 self.ip         =       res.content.strip()
+                self.success    =       True
 
         except:
             self.success        =       False
