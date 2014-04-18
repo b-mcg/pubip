@@ -18,6 +18,7 @@ Requires:
     or you can check your distro's repository.
 
 Usage:
+
     mv -v pubip/pubip.py ~/.i3/
 
     or,
