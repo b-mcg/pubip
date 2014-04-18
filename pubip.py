@@ -50,8 +50,13 @@ class Py3status(object):
 
         # Send GET request to icanhazip and close the connection after ip attribute is set
         # SSL verification is set to False because the cert is for www.icanhazip.com
-        with closing(requests.get(self.url, verify=False)) as res:
-            self.ip         =       res.content.strip()
+        try:
+
+            with closing(requests.get(self.url, verify=False)) as res:
+                self.ip         =       res.content.strip()
+
+        except:
+            self.success        =       False
 
     def public(self, i3status_output_json, i3status_config):
         """
@@ -61,18 +66,28 @@ class Py3status(object):
         in i3bar.
 
         """
+        if not self.success:
+            response        =       {   'full_text'     :   'pubIP: None',
+                                        'name'          :   'public',
+                                    }
+            if i3status_config['colors']:
+                response['colors']      =       i3status_config['color_bad']
+
+            return (6, response)
+
+        else:
         # Set cache timeout seeing as how your public IP is unlikely to change much
-        CACHE_TIMEOUT   =       600
+            CACHE_TIMEOUT   =       600
 
-        # Bulid response dictionary
-        response        =       {   'full_text'     :   'pubIP: {0}'.format(self.ip), 
-                                    'name'          :   'public',
-                                    'cached_until'  :   time() + CACHE_TIMEOUT
-                                }
+            # Bulid response dictionary
+            response        =       {   'full_text'     :   'pubIP: {0}'.format(self.ip), 
+                                        'name'          :   'public',
+                                        'cached_until'  :   time() + CACHE_TIMEOUT
+                                    }
 
-        if i3status_config['colors']:
-            response['colors']      =       i3status_config['color_good']
+            if i3status_config['colors']:
+                response['colors']      =       i3status_config['color_good']
 
 
 
-        return (6, response)
+            return (6, response)
